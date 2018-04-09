@@ -74,7 +74,7 @@ class CPU {
         const IR = this.reg.PC;
 
         // Debugging output
-        // console.log(`${this.reg.PC}: ${IR.toString(2)}`);
+        console.log(`${this.reg.PC}: ${IR.toString(2)}`);
 
         // Get the two bytes in memory _after_ the PC in case the instruction
         // needs them.
@@ -94,7 +94,7 @@ class CPU {
                 this.reg[operandA] = operandB;
                 break;
             case 0b01000011:
-                console.log(this.ram.read(operandA));
+                console.log(this.reg[operandA]);
                 break;
             case 0b00000001:
                 // process.exit();
@@ -110,10 +110,8 @@ class CPU {
         // for any particular instruction.
         
         // !!! IMPLEMENT ME
+        this.reg.PC++;
         this.reg.PC += this.ram.read(IR) >>> 6;
-        console.log(this.reg.PC);
-        console.log(this.reg);
-        console.log(IR);
     }
 }
 
