@@ -4,6 +4,7 @@
 const LDI = 0b10011001;
 const PRN = 0b01000011;
 const HLT = 0b00000001;
+const MUL = 0b10101010;
 
 /**
  * Class for simulating a simple Computer (CPU & memory)
@@ -108,6 +109,9 @@ class CPU {
                 // process.exit();
                 this.stopClock();
                 break;
+            case 0b10101010:
+                this.alu('MUL', operandA, operandB);
+                break;
             default:
                 break;
         }
@@ -120,7 +124,7 @@ class CPU {
         // !!! IMPLEMENT ME
         let operandCount = (IR >>> 6) & 0b11;
         let totalInstructionLen = operandCount + 1;
-        this.reg.PC = totalInstructionLen;
+        this.reg.PC += totalInstructionLen;
         // this.reg.PC++;
         // this.reg.PC += this.ram.read(IR) >>> 6;
     }
