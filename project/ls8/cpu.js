@@ -74,42 +74,27 @@ class CPU {
     // index into memory of the instruction that's about to be executed
     // right now.)
 
-<<<<<<< HEAD
         // !!! IMPLEMENT ME
         const IR = this.ram.read(this.reg.PC);
         // const IR = this.reg.PC;
 
         // Debugging output
         // console.log(`${this.reg.PC}: ${IR.toString(2)}`);
-=======
-    // !!! IMPLEMENT ME
-    const IR = this.reg.PC;
-
-    // Debugging output
-    // console.log(`${this.reg.PC}: ${IR.toString(2)}`);
->>>>>>> 331cf7a5271405ead9f40abb7d049f9c0e4a1fac
 
     // Get the two bytes in memory _after_ the PC in case the instruction
     // needs them.
 
-<<<<<<< HEAD
         // !!! IMPLEMENT ME
         const operandA = this.ram.read(this.reg.PC+1);
         const operandB = this.ram.read(this.reg.PC+2);
         // const operandA = this.ram.read(IR+1);
         // const operandB = this.ram.read(IR+2);
-=======
-    // !!! IMPLEMENT ME
-    const operandA = this.ram.read(IR + 1);
-    const operandB = this.ram.read(IR + 2);
->>>>>>> 331cf7a5271405ead9f40abb7d049f9c0e4a1fac
 
     // Execute the instruction. Perform the actions for the instruction as
     // outlined in the LS-8 spec.
 
     // console.log(this.ram.read(IR));
 
-<<<<<<< HEAD
         // !!! IMPLEMENT ME
         // this.ram.read(IR)
         switch (IR) {
@@ -138,40 +123,7 @@ class CPU {
         this.reg.PC = totalInstructionLen;
         // this.reg.PC++;
         // this.reg.PC += this.ram.read(IR) >>> 6;
-=======
-    // !!! IMPLEMENT ME
-    switch (this.ram.read(IR)) {
-      //LDI
-      case 0b10011001:
-        this.reg[operandA] = operandB;
-        break;
-      //PRN
-      case 0b01000011:
-        console.log(this.reg[operandA]);
-        break;
-      //MUL
-      case 0b10101010: 
-        this.alu('MUL', operandA, operandB);
-        break;
-      //HLT
-      case 0b00000001:
-        // process.exit();
-        this.stopClock();
-        break;
-      default:
-        break;
->>>>>>> 331cf7a5271405ead9f40abb7d049f9c0e4a1fac
     }
-
-    // Increment the PC register to go to the next instruction. Instructions
-    // can be 1, 2, or 3 bytes long. Hint: the high 2 bits of the
-    // instruction byte tells you how many bytes follow the instruction byte
-    // for any particular instruction.
-
-    // !!! IMPLEMENT ME
-    this.reg.PC++;
-    this.reg.PC += this.ram.read(IR) >>> 6;
-  }
 }
 
 module.exports = CPU;
