@@ -5,6 +5,8 @@ const LDI = 0b10011001;
 const PRN = 0b01000011;
 const HLT = 0b00000001;
 const MUL = 0b10101010;
+const PUSH = 0b01001101;
+const POP = 0b01001100;
 
 /**
  * Class for simulating a simple Computer (CPU & memory)
@@ -75,59 +77,68 @@ class CPU {
     // index into memory of the instruction that's about to be executed
     // right now.)
 
-        // !!! IMPLEMENT ME
-        const IR = this.ram.read(this.reg.PC);
-        // const IR = this.reg.PC;
+    // !!! IMPLEMENT ME
+    const IR = this.ram.read(this.reg.PC);
+    // const IR = this.reg.PC;
 
-        // Debugging output
-        // console.log(`${this.reg.PC}: ${IR.toString(2)}`);
+    // Debugging output
+    // console.log(`${this.reg.PC}: ${IR.toString(2)}`);
 
     // Get the two bytes in memory _after_ the PC in case the instruction
     // needs them.
 
-        // !!! IMPLEMENT ME
-        const operandA = this.ram.read(this.reg.PC+1);
-        const operandB = this.ram.read(this.reg.PC+2);
-        // const operandA = this.ram.read(IR+1);
-        // const operandB = this.ram.read(IR+2);
+    // !!! IMPLEMENT ME
+    const operandA = this.ram.read(this.reg.PC + 1);
+    const operandB = this.ram.read(this.reg.PC + 2);
+    // const operandA = this.ram.read(IR+1);
+    // const operandB = this.ram.read(IR+2);
 
     // Execute the instruction. Perform the actions for the instruction as
     // outlined in the LS-8 spec.
 
     // console.log(this.ram.read(IR));
 
-        // !!! IMPLEMENT ME
-        // this.ram.read(IR)
-        switch (IR) {
-            case LDI:
-                this.reg[operandA] = operandB;
-                break;
-            case PRN:
-                console.log(this.reg[operandA]);
-                break;
-            case HLT:
-                // process.exit();
-                this.stopClock();
-                break;
-            case 0b10101010:
-                this.alu('MUL', operandA, operandB);
-                break;
-            default:
-                break;
-        }
-        
-        // Increment the PC register to go to the next instruction. Instructions
-        // can be 1, 2, or 3 bytes long. Hint: the high 2 bits of the
-        // instruction byte tells you how many bytes follow the instruction byte
-        // for any particular instruction.
-        
-        // !!! IMPLEMENT ME
-        let operandCount = (IR >>> 6) & 0b11;
-        let totalInstructionLen = operandCount + 1;
-        this.reg.PC += totalInstructionLen;
-        // this.reg.PC++;
-        // this.reg.PC += this.ram.read(IR) >>> 6;
+    // !!! IMPLEMENT ME
+    // this.ram.read(IR)
+    switch (IR) {
+      case LDI:
+        this.reg[operandA] = operandB;
+        break;
+      case PRN:
+        console.log(this.reg[operandA]);
+        break;
+      case HLT:
+        // process.exit();
+        this.stopClock();
+        break;
+      case MUL:
+        this.alu('MUL', operandA, operandB);
+        break;
+      case PUSH:
+        if (this.reg[8] === 0) this.reg[8] = 0xF4;
+        this.reg[8]--;
+        this.ram.write(this.reg[8], this.reg[operandA]);
+        break;
+      case POP:
+        this.reg[operandA] = this.ram.read(this.reg[8]);
+        this.reg[8]++;
+        break;
+      default:
+        break;
     }
+
+    // Increment the PC register to go to the next instruction. Instructions
+    // can be 1, 2, or 3 bytes long. Hint: the high 2 bits of the
+    // instruction byte tells you how many bytes follow the instruction byte
+    // for any particular instruction.
+
+    // !!! IMPLEMENT ME
+    let operandCount = (IR >>> 6) & 0b11;
+    let totalInstructionLen = operandCount + 1;
+    this.reg.PC += totalInstructionLen;
+    // this.reg.PC++;
+    // this.reg.PC += this.ram.read(IR) >>> 6;
+  }
 }
 
 module.exports = CPU;
