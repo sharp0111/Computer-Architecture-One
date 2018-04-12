@@ -11,6 +11,8 @@ const CALL = 0b01001000;
 const ADD = 0b10101000;
 const RET = 0b000001001;
 
+const SP = 7;
+
 /**
  * Class for simulating a simple Computer (CPU & memory)
  */
@@ -106,8 +108,8 @@ class CPU {
     // console.log(this.ram.read(IR));
 
     const _push = value => {
-      this.reg[7]--;
-      this.ram.write(this.reg[7], value);
+      this.reg[SP]--;
+      this.ram.write(this.reg[SP], value);
     };
 
     // !!! IMPLEMENT ME
@@ -130,12 +132,12 @@ class CPU {
         this.alu('ADD', operandA, operandB);
         break;
       case PUSH:
-        if (this.reg[7] === 0) this.reg[7] = 0xf4;
+        if (this.reg[SP] === 0) this.reg[SP] = 0xf4;
         _push(this.reg[operandA]);
         break;
       case POP:
-        this.reg[operandA] = this.ram.read(this.reg[7]);
-        this.reg[7]++;
+        this.reg[operandA] = this.ram.read(this.reg[SP]);
+        this.reg[SP]++;
         break;
       case CALL:
         this.flag = true;
@@ -144,8 +146,8 @@ class CPU {
         break;
       case RET:
         this.flag = true;
-        this.reg.PC = this.ram.read(this.reg[7]);
-        this.reg[7]++;
+        this.reg.PC = this.ram.read(this.reg[SP]);
+        this.reg[SP]++;
         break;
       default:
         break;
